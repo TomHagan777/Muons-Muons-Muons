@@ -318,7 +318,7 @@ if (hideControl <= 0){
     cursorVisibility = 0;
   } 
   if (fluxMode == true && burnMode == false){
-    //cursor('grab');
+    cursor('grab');
   } else if (fluxMode == false && burnMode == true && keyCode != DOWN_ARROW){
     cursor('cell');
   } else if (fluxMode == true && burnMode == true){
