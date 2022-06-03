@@ -1,3 +1,12 @@
+//intial loader ¬
+let mode;
+let radiationAlpha = 255;
+let notFoundAlpha = 0;
+let loadBar1 = 0;
+let barAlpha1 = 255;
+let loadBar2 = 0;
+let barAlpha2 = 0;
+
 //muon detector simulation intialise ¬
 let muon = 0;
 let muon2 = 1;
@@ -28,6 +37,7 @@ let colonVarM = ':0';
 let colonVarS = ':0';
 
 function setup() {
+  mode = 0;
   cnv = createCanvas(windowWidth,windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(RADIANS);
@@ -36,7 +46,7 @@ function setup() {
   background(0,0,0,100);
   noCursor();
 
-  textSize(14)
+  textSize(14) //make this reponsive to media width along with 'twinkle'
   textFont('Inter');
   textStyle(400);
 
@@ -72,6 +82,39 @@ function setup() {
 }
 
 function draw() {
+
+  if (mode == 0){
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////// Initaliser Loading ¬
+  
+  background(0);
+  fill(255,radiationAlpha);
+  text('searching for radiation detector...', width/2-120, height/2);
+  fill(255,notFoundAlpha);
+  text('no detector found — establishing simulator...', width/2-140, height/2);
+  
+  fill(0,0,50,barAlpha1)
+  rectMode(CORNER);
+  rect(width/2-90, height/2+20, loadBar1++, 10);
+  
+  if(loadBar1 > 130){
+    barAlpha1 = 0;
+    fill(loadBar2*1.5,100,50+loadBar2/3,barAlpha2)
+    barAlpha2 = 255;
+    rect(width/2-90, height/2+20, loadBar2++, 10);
+    radiationAlpha = 0; 
+    notFoundAlpha = 255;
+  }
+
+  if (loadBar2 > 180){
+    barAlpha2 = 0;
+    notFoundAlpha = 0;
+    mode = 1;
+  }
+}
+
+if (mode == 1){
   blendMode(BLEND); //so additive blending does not affect background
   fill(0,0,0,tails); //background
   rect(width/2, height/2, width, height);
@@ -130,7 +173,7 @@ function draw() {
       
       offTimer = 0;     //resets off timer back to zero to start again
       LEDoff = false 
-      console.log(bigStar.length + '/' + muon); //handy: 'how many flared stars are created vs total stars in console log'
+      //console.log(bigStar.length + '/' + muon); //handy: 'how many flared stars are created vs total stars in console log'
       
       muon2++;   //vital: muon2 is always one ahead of muon, kicking us out of this star creation conditional
     } 
@@ -154,29 +197,33 @@ for (let i=0; i < bigStar.length; i++) {
 ///////////////////////////////////////////////////////////////////  
 //////////////////////////////////////////////////////// Twinkle ¬  
 
+let responsiveWidth = width/7
+console.log(width, '+', responsiveWidth);
+
 if (burnMode == true && muon > 0){
   tails = 5;
   scintillationAmount = 0;
   burnButton.style('border: solid 1px; padding-top: 5px; padding-left: 6px;')
-} else if (burnMode == false && muon < 220) {
+} else if (burnMode == false && muon < responsiveWidth){        //220
   tails = 100;
   scintillationAmount = 100;
-} else if (burnMode == false && muon < 300) {
+} else if (burnMode == false && muon < responsiveWidth+80){     //300
   tails = 100;
   scintillationAmount = 80;
-} else if (burnMode == false && muon < 360){
+} else if (burnMode == false && muon < responsiveWidth+140){    //360
   tails = 100;
   scintillationAmount = 50;
-} else if (burnMode == false && muon < 380){
+} else if (burnMode == false && muon < responsiveWidth+160){    //380
   tails = 100;
   scintillationAmount = 30;
-} else if (burnMode == false && muon < 400){
+} else if (burnMode == false && muon < responsiveWidth+180){    //400
   tails = 100;
   scintillationAmount = 20;
-} else if (burnMode == false && muon >= 400){
+} else if (burnMode == false && muon >= responsiveWidth+180){   //400
   tails = 100;
   scintillationAmount = 10; //scintillation gradually phases out as muon count increases
 }
+
 if (burnMode == false){
   burnButton.style('border: 0px; border-top: solid 1px; padding-top: 5px; padding-left: 7px;')
 }
@@ -275,7 +322,7 @@ if (hideControl <= 0){
     cursorVisibility = 0;
   } 
   if (fluxMode == true && burnMode == false){
-    cursor('grab');
+    //cursor('grab');
   } else if (fluxMode == false && burnMode == true && keyCode != DOWN_ARROW){
     cursor('cell');
   } else if (fluxMode == true && burnMode == true){
@@ -297,7 +344,7 @@ if (hideControl <= 0){
   line(mouseX, mouseY-5, mouseX, mouseY+5);
   noStroke();
 }
-
+}
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -474,11 +521,6 @@ function timeItMinutes() {
   } else {
     minutes = 0;
   }
-  
-  // if (minutes === 30){ //resets sketch on half hour of up time
-  //   resetCount();
-  // }
-
 }
 
 function timeItHours() {
