@@ -90,9 +90,9 @@ function draw() {
   
   background(0);
   fill(255,radiationAlpha);
-  text('searching for radiation detector...', width/2-120, height/2);
+  text('searching for radiation detector...', width/2-90, height/2);
   fill(255,notFoundAlpha);
-  text('no detector found — establishing simulator...', width/2-140, height/2);
+  text('no detector found — starting simulator...', width/2-110, height/2);
   
   fill(0,0,50,barAlpha1)
   rectMode(CORNER);
@@ -341,9 +341,9 @@ if (hideControl <= 0){
   noStroke();
 }
 
-  // if (muon > 500){ //resets sketch when muons are above 500
-  //   resetCount();
-  // }
+  if (muon > 600){ //resets sketch when muons are above 500
+    resetCount();
+  }
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
