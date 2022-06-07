@@ -37,7 +37,7 @@ let colonVarM = ':0';
 let colonVarS = ':0';
 
 function setup() {
-  mode = 0;
+  mode = 1;
   cnv = createCanvas(windowWidth,windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(RADIANS);
@@ -78,11 +78,42 @@ function setup() {
   saveCanvas = createGraphics(windowWidth, windowHeight); 
   //cnv.mousePressed(exportCanvas); //<–– switch this function on to 'click' to save canvas
   exportButton = false;
+
+////INTIALISE MUONS FOR TESTING////////////////////////////////////////////////////////////////////////////////////
+ 
+  muon = 50;
+  muon2 = muon+1;
+
+  for (let i=0; i<muon; i++) {
+    let loc = createVector(random(width), random(height), random(0.5,2));
+    let angle = 0;
+    let dir = createVector(cos(angle), sin(angle));
+    let speed = random(0.15,0.50)
+    
+    let randomInterval1 = int(random(0,75));
+    if (randomInterval1 === 1) {   //REDS
+      newFill = random(0,50);
+      bigStarFill = random(0,50);
+    } else {
+      newFill = random(230,260); //PURPLES
+      bigStarFill = random(230,260);
+    }
+
+    if (randomInterval1 <= 7){
+      let flare = random(20, width-20);
+      let bigStarSize = random(1,3);
+      let bS = new BigStar (loc, dir, speed, bigStarFill, bigStarSize, flare);
+      bigStar.push(bS);
+    } else {
+      let p = new StarNature (loc, dir, speed, newFill);
+      stars.push(p);
+    }
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 }
 
 function draw() {
-
   if (mode == 0){
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
@@ -169,7 +200,7 @@ if (mode == 1){
       
       offTimer = 0;     //resets off timer back to zero to start again
       LEDoff = false 
-      //console.log(bigStar.length + '/' + muon); //handy: 'how many flared stars are created vs total stars in console log'
+      console.log(bigStar.length + '/' + muon); //handy: 'how many flared stars are created vs total stars in console log'
       
       muon2++;   //vital: muon2 is always one ahead of muon, kicking us out of this star creation conditional
     } 
@@ -194,7 +225,7 @@ for (let i=0; i < bigStar.length; i++) {
 //////////////////////////////////////////////////////// Twinkle ¬  
 
 let responsiveWidth = width/7
-console.log(width, '+', responsiveWidth);
+//console.log(width, '+', responsiveWidth);
 
 if (burnMode == true && muon > 0){
   tails = 5;
@@ -217,7 +248,7 @@ if (burnMode == true && muon > 0){
   scintillationAmount = 20;
 } else if (burnMode == false && muon >= responsiveWidth+180){   //400
   tails = 100;
-  scintillationAmount = 10; //scintillation gradually phases out as muon count increases
+  scintillationAmount = 20; //scintillation gradually phases out as muon count increases
 }
 
 if (burnMode == false){
@@ -341,7 +372,7 @@ if (hideControl <= 0){
   noStroke();
 }
 
-  if (muon > 600){ //resets sketch when muons are above 500
+  if (muon >= 1000){ //resets sketch when muons get to 600
     resetCount();
   }
 }
@@ -493,6 +524,16 @@ function trailModeActivated(){
 
 function exportCanvas() {         //Export Switch
   exportButton = !exportButton;
+}
+
+function keyTyped() {             //Hot Key Shortcuts
+  if (key === 'f') {
+    fluxMode = !fluxMode;
+  } else if (key === 'b') {
+    burnMode = !burnMode;
+  } else if (key === 'r') {
+    resetCount();
+  }
 }
 
 function resetCount(){            //Reset Function
