@@ -37,7 +37,7 @@ let colonVarM = ':0';
 let colonVarS = ':0';
 
 function setup() {
-  mode = 1;
+  mode = 0;
   cnv = createCanvas(windowWidth,windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(RADIANS);
@@ -81,7 +81,7 @@ function setup() {
 
 ////INTIALISE MUONS FOR TESTING////////////////////////////////////////////////////////////////////////////////////
  
-  muon = 50;
+  muon = 0; //<–– increase this number to intialise your own stars at start
   muon2 = muon+1;
 
   for (let i=0; i<muon; i++) {
@@ -372,9 +372,9 @@ if (hideControl <= 0){
   noStroke();
 }
 
-  if (muon >= 1000){ //resets sketch when muons get to 600
-    resetCount();
-  }
+  // if (muon >= 700){ //resets sketch when muons get to this number
+  //   resetCount();
+  // }
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

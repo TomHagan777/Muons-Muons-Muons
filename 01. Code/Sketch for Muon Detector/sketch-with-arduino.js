@@ -84,6 +84,38 @@ function setup() {
 
   serial.list();                      // list the serial ports
   serial.open(portName);              // open a serial port
+
+////INTIALISE MUONS FOR TESTING////////////////////////////////////////////////////////////////////////////////////
+ 
+  muon = 50;
+  muonInData2 = muon+1;
+
+  for (let i=0; i<muon; i++) {
+    let loc = createVector(random(width), random(height), random(0.5,2));
+    let angle = 0;
+    let dir = createVector(cos(angle), sin(angle));
+    let speed = random(0.15,0.50)
+    
+    let randomInterval1 = int(random(0,75));
+    if (randomInterval1 === 1) {   //REDS
+      newFill = random(0,50);
+      bigStarFill = random(0,50);
+    } else {
+      newFill = random(230,260); //PURPLES
+      bigStarFill = random(230,260);
+    }
+
+    if (randomInterval1 <= 7){
+      let flare = random(20, width-20);
+      let bigStarSize = random(1,3);
+      let bS = new BigStar (loc, dir, speed, bigStarFill, bigStarSize, flare);
+      bigStar.push(bS);
+    } else {
+      let p = new StarNature (loc, dir, speed, newFill);
+      stars.push(p);
+    }
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 function draw() {
@@ -177,26 +209,33 @@ for (let i=0; i < bigStar.length; i++) {
 ///////////////////////////////////////////////////////////////////  
 //////////////////////////////////////////////////////// Twinkle ¬  
 
+let responsiveWidth = width/7
+//console.log(width, '+', responsiveWidth);
+
 if (burnMode == true && muon > 0){
 tails = 5;
 scintillationAmount = 0;
 burnButton.style('border: solid 1px; padding-top: 5px; padding-left: 6px;')
-} else if (burnMode == false && muon < 300) {
+} else if (burnMode == false && muon < responsiveWidth){        //220
 tails = 100;
 scintillationAmount = 100;
-} else if (burnMode == false && muon < 360){
+} else if (burnMode == false && muon < responsiveWidth+80){     //300
+tails = 100;
+scintillationAmount = 80;
+} else if (burnMode == false && muon < responsiveWidth+140){    //360
 tails = 100;
 scintillationAmount = 50;
-} else if (burnMode == false && muon < 380){
+} else if (burnMode == false && muon < responsiveWidth+160){    //380
 tails = 100;
 scintillationAmount = 30;
-} else if (burnMode == false && muon < 400){
+} else if (burnMode == false && muon < responsiveWidth+180){    //400
 tails = 100;
 scintillationAmount = 20;
-} else if (burnMode == false && muon >= 400){
+} else if (burnMode == false && muon >= responsiveWidth+180){   //400
 tails = 100;
-scintillationAmount = 10; //scintillation gradually phases out as muon count increases
+scintillationAmount = 20; //scintillation gradually phases out as muon count increases
 }
+
 if (burnMode == false){
 burnButton.style('border: 0px; border-top: solid 1px; padding-top: 5px; padding-left: 7px;')
 }
@@ -316,8 +355,11 @@ strokeWeight(cursorVisibility);
 line(mouseX-5, mouseY, mouseX+5, mouseY);
 line(mouseX, mouseY-5, mouseX, mouseY+5);
 noStroke();
-}
 
+if (muon >= 1000){ //resets sketch when muons get to 1000
+resetCount();
+}
+}
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -468,6 +510,16 @@ function exportCanvas() {         //Export Switch
 exportButton = !exportButton;
 }
 
+function keyTyped() {             //Hot Key Shortcuts
+if (key === 'f') {
+fluxMode = !fluxMode;
+} else if (key === 'b') {
+burnMode = !burnMode;
+} else if (key === 'r') {
+resetCount();
+}
+}
+
 function resetCount(){            //Reset Function
 muon = 0;
 muon2 = 1;
@@ -494,11 +546,6 @@ minutes ++;
 } else {
 minutes = 0;
 }
-
-// if (minutes === 30){ //resets sketch on half hour of up time
-//   resetCount();
-// }
-
 }
 
 function timeItHours() {
@@ -512,7 +559,6 @@ resetCount(); //if more than a day restarts entire sketch
 function windowResized() {        //Auto Media Resize Function
 resizeCanvas(windowWidth, windowHeight);
 }
-
 ///////////////////////////////////////////////////////////////////
 ////////////////////— Detector Connection —////////////////////////
 /////////////////////////////////////////////////////////////////// 
