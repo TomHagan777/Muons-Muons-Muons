@@ -21,6 +21,15 @@ let resetButton = false;  //reset
 let hideControl = 0;
 let standByFill = [0,0,75,100];
 
+//information box ¬
+let infoBoxButton = false;
+let infoHide = 0;
+let infoButtonHide = 0;
+let infoCol = 0;
+let infoSatch = 100;
+let infoBright = 0;
+let infoTrans = 100;
+
 //star intialise ¬
 let tails = 100;
 let noiseScale = 500;
@@ -73,6 +82,16 @@ function setup() {
     burnButton.position(width-410,height-35);
     burnButton.style('padding-right: 95px;');
     burnButton.addClass("buttonClass");
+
+  infoButton = createImg('infoButton.png', 'info button');
+  infoButton.mousePressed(informationBox);
+    infoButton.position(width-25,10);
+    infoButton.style("height: 20px; display: none")
+
+  infoButtonClose = createImg('infoButtonClose.png', 'info button');
+  infoButtonClose.mousePressed(informationBox);
+    infoButtonClose.position(width-30,10);
+    infoButtonClose.style("height: 20px; display: none")
 
   //variable for saving canvas (currently switched off) ¬
   saveCanvas = createGraphics(windowWidth, windowHeight); 
@@ -311,19 +330,37 @@ if (hours >= 10){
   colonVarH = '0';
 }
 
-if (keyCode === DOWN_ARROW){ //keyboard controls to hide text + menu
+if (keyCode === DOWN_ARROW){ //keyboard controls to hide text + buttons
   hideControl++;
+  infoHide = infoHide + 3;
+  infoButtonHide++;
   standByFill = [0,0,100,0];
+  infoButton.position(width-25,10-infoButtonHide)
+  infoButtonClose.position(width-30,10-infoButtonHide)
 } 
-if (hideControl >= 50){
+
+if (infoHide >= 200){
+  infoHide = 200;
+  infoButtonHide = 50;
   hideControl = 50;
-} 
+}
+
 if (keyCode === UP_ARROW){
   hideControl--;
+  infoHide = infoHide - 3;
+  infoButtonHide--;
   standByFill = [0,0,75,100];
+  infoButton.position(width-25,10-infoButtonHide)
+  infoButtonClose.position(width-30,10-infoButtonHide);
 } 
 if (hideControl <= 0){
   hideControl = 0;
+}
+if (infoHide <= 0){
+  infoHide = 0;
+}
+if (infoButtonHide <= 0){
+  infoButtonHide = 0;
 }
 
   rectMode(CORNER);
@@ -339,6 +376,53 @@ if (hideControl <= 0){
   resetButton.position(width-132,height-35+hideControl);
   fluxButton.position(width-271.5,height-35+hideControl);
   burnButton.position(width-410,height-35+hideControl);
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////// Information Pop Up ¬
+
+if (infoBoxButton == true){
+  infoButton.style('display:none');
+  infoButtonClose.style('display:block');
+
+  infoTrans = 100;
+
+  infoSatch = infoSatch - 1;
+  infoCol = infoCol + 1;
+  infoBright = infoBright + 4;
+
+  if (infoSatch < 1){
+    infoSatch = 0;
+    infoCol = 100;
+    infoBright = 100;
+  }
+}
+
+if (infoBoxButton == false){
+  infoButton.style('display:block');
+  infoButtonClose.style('display:none');
+  infoTrans = infoTrans - 3;
+    if(infoTrans <= 0){
+      infoSatch = 100;
+      infoCol = 0;
+      infoBright = 0;
+    }
+}
+
+let newInfoCol = map(infoCol, 0, 100, 230, 280);
+
+push()
+  fill(newInfoCol,infoSatch,infoBright,infoTrans);
+  text('Making the invisible visible, this is a live generative design project', 10, 25-infoHide);
+  text('detecting cosmic ray radiation (muons) falling to earth from exploded', 10, 45-infoHide);
+  text('stars of distant galaxies; patiently generating an interactive starscape.', 10, 65-infoHide);
+  text('The artwork is affected by muon count and the intermittence of these', 10, 85-infoHide);
+  text('captures creates fluctuations in size and speed.', 10, 105-infoHide);
+
+  text('Use Flux [ f ] to control the stars with mouse gesture, Burn [ b ]', 10, 145-infoHide);
+  text('to trail the stars, the down arrow [ ↓ ] to hide text, and', 10, 165-infoHide);
+  text('the up arrow [ ↑ ] to make them accessible again.', 10, 185-infoHide);
+pop()
 
 ///////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////// 
@@ -376,6 +460,7 @@ if (hideControl <= 0){
   //   resetCount();
   // }
 }
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -533,7 +618,13 @@ function keyTyped() {             //Hot Key Shortcuts
     burnMode = !burnMode;
   } else if (key === 'r') {
     resetCount();
+  } else if (key === 'i') {
+    infoBoxButton = !infoBoxButton;
   }
+}
+
+function informationBox() {
+  infoBoxButton = !infoBoxButton;
 }
 
 function resetCount(){            //Reset Function
