@@ -339,8 +339,8 @@ if (keyCode === DOWN_ARROW){ //keyboard controls to hide text + buttons
   infoButtonClose.position(width-30,10-infoButtonHide)
 } 
 
-if (infoHide >= 200){
-  infoHide = 200;
+if (infoHide >= 220){
+  infoHide = 220;
   infoButtonHide = 50;
   hideControl = 50;
 }
@@ -409,19 +409,24 @@ if (infoBoxButton == false){
     }
 }
 
+if (hours === 0 && minutes === 0 && seconds === 10){
+  infoBoxButton = true;
+}
+
 let newInfoCol = map(infoCol, 0, 100, 230, 280);
 
 push()
   fill(newInfoCol,infoSatch,infoBright,infoTrans);
   text('Making the invisible visible, this is a live generative design project', 10, 25-infoHide);
   text('detecting cosmic ray radiation (muons) falling to earth from exploded', 10, 45-infoHide);
-  text('stars of distant galaxies; patiently generating an interactive starscape.', 10, 65-infoHide);
+  text('stars from distant galaxies, patiently generating an interactive starscape.', 10, 65-infoHide);
   text('The artwork is affected by muon count and the intermittence of these', 10, 85-infoHide);
   text('captures creates fluctuations in size and speed.', 10, 105-infoHide);
 
   text('Use Flux [ f ] to control the stars with mouse gesture, Burn [ b ]', 10, 145-infoHide);
   text('to trail the stars, the down arrow [ ↓ ] to hide text, and', 10, 165-infoHide);
-  text('the up arrow [ ↑ ] to make them accessible again.', 10, 185-infoHide);
+  text('the up arrow [ ↑ ] to make them accessible again. Close this', 10, 185-infoHide);
+  text('with [ i ], or optionally click the buttons on screen.', 10, 205-infoHide);
 pop()
 
 ///////////////////////////////////////////////////////////////////
