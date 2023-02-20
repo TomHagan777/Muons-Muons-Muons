@@ -49,7 +49,7 @@ let colonVarM = ':0';
 let colonVarS = ':0';
 
 function setup() {
-  mode = 1;
+  mode = 0; //set to 1 to skip loading bar
   cnv = createCanvas(windowWidth,windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(RADIANS);
