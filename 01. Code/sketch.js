@@ -23,12 +23,15 @@ let standByFill = [0,0,75,100];
 
 //information box ¬
 let infoBoxButton = false;
-let infoHide = 0;
 let infoButtonHide = 0;
 let infoCol = 0;
 let infoSatch = 100;
 let infoBright = 0;
 let infoTrans = 100;
+let infoShow = 0;       //move
+let infoStart = -500;   //start 
+let infoEnd = 210;      //end
+let easyease = 0.03;    //ease
 
 //star intialise ¬
 let tails = 100;
@@ -46,7 +49,7 @@ let colonVarM = ':0';
 let colonVarS = ':0';
 
 function setup() {
-  mode = 0;
+  mode = 1;
   cnv = createCanvas(windowWidth,windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
   angleMode(RADIANS);
@@ -83,15 +86,9 @@ function setup() {
     burnButton.style('padding-right: 95px;');
     burnButton.addClass("buttonClass");
 
-  infoButton = createImg('infoButton.png', 'info button');
+  infoButton = createButton("¬");
   infoButton.mousePressed(informationBox);
-    infoButton.position(width-25,10);
-    infoButton.style("height: 20px; display: none")
-
-  infoButtonClose = createImg('infoButtonClose.png', 'info button');
-  infoButtonClose.mousePressed(informationBox);
-    infoButtonClose.position(width-30,10);
-    infoButtonClose.style("height: 20px; display: none")
+    infoButton.addClass("buttonClass02");
 
   //variable for saving canvas (currently switched off) ¬
   saveCanvas = createGraphics(windowWidth, windowHeight); 
@@ -332,35 +329,28 @@ if (hours >= 10){
 
 if (keyCode === DOWN_ARROW){ //keyboard controls to hide text + buttons
   hideControl++;
-  infoHide = infoHide + 3;
+  infoShow = infoShow - 1;
   infoButtonHide++;
   standByFill = [0,0,100,0];
-  infoButton.position(width-25,10-infoButtonHide)
-  infoButtonClose.position(width-30,10-infoButtonHide)
+  infoBoxButton = false
 } 
 
-if (infoHide >= 220){
-  infoHide = 220;
-  infoButtonHide = 50;
+if (infoShow <= -30){
+  infoShow = -30;
   hideControl = 50;
 }
 
 if (keyCode === UP_ARROW){
   hideControl--;
-  infoHide = infoHide - 3;
+  infoShow = infoShow + 0.6;
   infoButtonHide--;
   standByFill = [0,0,75,100];
-  infoButton.position(width-25,10-infoButtonHide)
-  infoButtonClose.position(width-30,10-infoButtonHide);
 } 
 if (hideControl <= 0){
   hideControl = 0;
 }
-if (infoHide <= 0){
-  infoHide = 0;
-}
-if (infoButtonHide <= 0){
-  infoButtonHide = 0;
+if (infoShow >= 5){
+  infoShow = 5;
 }
 
   rectMode(CORNER);
@@ -382,11 +372,13 @@ if (infoButtonHide <= 0){
 ////////////////////////////////////////////////////// Information Pop Up ¬
 
 if (infoBoxButton == true){
-  infoButton.style('display:none');
-  infoButtonClose.style('display:block');
-
   infoTrans = 100;
+  infoButton.position(infoShow+4,-12);
 
+  let targetX = infoEnd*0.5;
+  let dx = targetX - infoStart;
+  infoStart += dx * easyease;
+  
   infoSatch = infoSatch - 1;
   infoCol = infoCol + 1;
   infoBright = infoBright + 4;
@@ -399,10 +391,14 @@ if (infoBoxButton == true){
 }
 
 if (infoBoxButton == false){
-  infoButton.style('display:block');
-  infoButtonClose.style('display:none');
-  infoTrans = infoTrans - 3;
+  infoButton.position(infoShow,-12);
+  
+  infoCol = infoCol - 3;
+  infoSatch = infoSatch + 30;
+  
+  infoTrans = infoTrans - 2;
     if(infoTrans <= 0){
+      infoStart = -500;
       infoSatch = 100;
       infoCol = 0;
       infoBright = 0;
@@ -417,16 +413,16 @@ let newInfoCol = map(infoCol, 0, 100, 230, 280);
 
 push()
   fill(newInfoCol,infoSatch,infoBright,infoTrans);
-  text('Making the invisible visible, this is a live generative design project', 10, 25-infoHide);
-  text('detecting cosmic ray radiation (muons) falling to earth from exploded', 10, 45-infoHide);
-  text('stars from distant galaxies, patiently generating an interactive starscape.', 10, 65-infoHide);
-  text('The artwork is affected by muon count and the intermittence of these', 10, 85-infoHide);
-  text('captures creates fluctuations in size and speed.', 10, 105-infoHide);
+  text('Making the invisible visible, this is a live generative design project', infoStart, 25);
+  text('detecting cosmic ray radiation (muons) falling to earth from exploded', infoStart, 45);
+  text('stars from distant galaxies, patiently generating an interactive starscape.', infoStart, 65);
+  text('The artwork is affected by muon count and the intermittence of these', infoStart, 85);
+  text('captures creates fluctuations in size and speed.', infoStart, 105);
 
-  text('Use Flux [ f ] to control the stars with mouse gesture, Burn [ b ]', 10, 145-infoHide);
-  text('to trail the stars, the down arrow [ ↓ ] to hide text, and', 10, 165-infoHide);
-  text('the up arrow [ ↑ ] to make them accessible again. Close this', 10, 185-infoHide);
-  text('with [ i ], or optionally click the buttons on screen.', 10, 205-infoHide);
+  text('Use Flux [ f ] to control the stars with mouse gesture, Burn [ b ]', infoStart, 145);
+  text('to trail the stars, the down arrow [ ↓ ] to hide text, and', infoStart, 165);
+  text('the up arrow [ ↑ ] to make them accessible again. Close this', infoStart, 185);
+  text('with [ i ], or optionally click the buttons on screen.', infoStart, 205);
 pop()
 
 ///////////////////////////////////////////////////////////////////
